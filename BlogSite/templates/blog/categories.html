@@ -1,0 +1,29 @@
+{% extends 'blog/base.html' %}
+{% block categories %}
+<div class="container">
+    <div class="row my-5">
+    {% if categori.post.all %}
+    <h3 class="my-3"> Posts of {{categori|title}}</h3>
+    {% for post in categori.post.all %}       
+            <div class="col-sm-4">
+                <div class="card">
+                    <img class="card-img-top" style="max-width: 350px; max-height:200px;" src="{{post.image.url}}" alt="Title">
+                    <div class="card-body">
+                        <h4 class="card-title">{{post.title|title }}</h4>
+                        <p class="card-text">{{post.content|truncatechars:100 | safe}}</p>
+                        <a href="{% url 'singlePost' post.slug %}" class="btn btn-primary" target="_blank" 
+                        rel="noopener noreferrer">Read More...</a>
+                        
+                    </div>
+                    
+                </div>
+            </div>          
+    {% endfor %}
+    {% endif %}
+        
+    </div>
+
+    
+
+</div>
+{% endblock categories %}

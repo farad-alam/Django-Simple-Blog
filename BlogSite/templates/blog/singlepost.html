@@ -1,0 +1,131 @@
+{% extends 'blog/base.html' %}
+
+{% block metaforsinglepost %}
+
+{% if singlePost.metadesc %}
+    <meta name="description" content="{{singlePost.metadesc}}">
+{% endif %}
+{% if singlePost.metatitle %}
+    <title>{{singlePost.metatitle}}</title>
+    <meta name="keywords" content="{{singlePost.metatitle}}">
+    {% else %}
+    <title>{{singlePost.title}}</title>
+{% endif %}
+
+{% endblock metaforsinglepost %}
+
+{% block singlepost %}
+{% load static %}
+
+    <div class="single-page container">
+        <div class="row">
+            <!-- Post Content Goes Here -->
+            <div class="col-sm-8 post-content">
+                <div class="post-detais text-success my-5">
+                    <ul class="list-group list-group-horizontal ">
+                        <li class="list-group-item text-success"> <strong>Category: </strong> {{singlePost.category|title }}</li>
+                        <li class="list-group-item text-success"> <strong>Published: </strong> {{singlePost.created}}</li>
+                        <li class="list-group-item text-success"> <strong>Last Updated: </strong> {{singlePost.updated}}</li>
+                    </ul>
+                </div>
+                <h1 class='my-3'>{{singlePost.title|title}}</h1>
+                <img style="max-width: 700px; max-height:350px;" class='my-3' src="{{singlePost.image.url}}" class="img-fluid rounded-top" alt="{{singlePost.title}}">
+                <p class='my-3'>{{singlePost.content|safe}}</p>
+
+                <!-- Comment Section Goes Here -->
+                <hr>
+
+                <div class="Social-Share my-5">
+
+
+                    <h3 class='farad'>Social Buttons</h3>
+                        <div class="my-social">
+                            <a class='text-primary mx-2' onclick="return fbs_click()" target="_blank">
+                                <i class="fa fa-facebook" style="font-size:48px;color:1877f2"></i>
+                              </a>
+                            <!-- PINTEREST -->
+                            <a data-pin-do="buttonPin" data-pin-config="none" class='text-danger mx-2' onclick="return pbs_click()" target="_blank">
+                                    <i class="fa fa-pinterest" style="font-size:48px;"></i> 
+                                </a>
+                              <!-- TWITTER -->
+                              <a class="tw-h mx-2" onclick="return tbs_click()"  target="_blank">
+                                <i class="fa fa-twitter" style="font-size:48px;color:1da1f2"></i>
+                              </a>
+                          
+                              <!-- LINKEDIN -->
+                              <a style="font-size:48px;color:1da1f2" class='text-success mx-2' onclick="return lbs_click()"  target="_blank">
+                                <i class="fa fa-linkedin"></i>
+                              </a>
+                          
+                              <!-- REDDIT -->
+                              <a class="text-warning mx-2" onclick="return rbs_click()" target="_blank">
+                                <i class="fa fa-reddit" style="font-size:48px;color:ff4500"></i> 
+                            </a>
+                          
+
+                        </div>    
+                    
+                </div>
+
+
+                <div class="my-5">
+                    <h3>Total Comment: {{singlePost.comments.all| length}} </h3>
+                    {% if singlePost.comments.all %}
+                        
+                        {% for comment in singlePost.comments.all %}
+                        <div class="my-3">
+                            <small>Author:</small>
+                            <h5 class="m-0 p-0 text-primary">{{comment.author_name}} </h5>
+                            <small class=""> Commented on {{comment.created}}</small>
+                            <div class="px-3 text-secondary border">
+                                <p >{{comment.comments}}</p>
+                            </div>
+                        </div>
+
+                            
+                        {% endfor %}
+
+                    {% else %}
+                    
+                    {% endif %}
+                </div>
+
+                <div class="my-5">
+                    <h3>Add New Comment</h3>
+                    <form action="" method="post">{% csrf_token %}
+                        <input type="hidden" name="postpk" value={{singlePost.pk}}>
+                        <div class="mb-3">
+                            <label for="" class="form-label">Name</label>
+                            <input type="text" class="form-control" name="author_name" id="author_name" aria-describedby="nameHelpId" placeholder="Donald Trump">
+                          </div>
+                        <div class="mb-3">
+                          <label for="" class="form-label">Email</label>
+                          <input type="email" class="form-control" name="email" id="email" aria-describedby="emailHelpId" placeholder="abc@mail.com">
+                        </div>
+                        <div class="mb-3">
+                          <label for="" class="form-label">Write Your Comment</label>
+                          <textarea class="form-control" name="comments" id="comments" rows="5"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </form>
+                </div>
+            </div>
+
+
+            <!-- Widget Goes Here -->
+            <div class="col-sm-4 widget ">
+                <div class="mt-5 p-3 bg-secondary bg-opacity-75 rounded text-white border border-dark">
+                    <p class='h4'>Recenty Published Post: </p>
+                    {% for post in posts %}
+                    {% comment %} <p class="h6" ><a class='link-light' href="{{post.slug}}"></a></p> {% endcomment %}
+                    <a class='text-white' href="{% url 'singlePost' post.slug %}" target="_blank" rel="noopener noreferrer">{{post.title}}</a><br>
+                {% endfor %}
+                </div>
+
+                    
+                
+            </div>
+        </div>
+    </div>
+
+{% endblock singlepost %}
